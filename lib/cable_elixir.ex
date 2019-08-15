@@ -1,6 +1,6 @@
-defmodule CableElixir do
+defmodule Cable do
   @moduledoc """
-  Documentation for CableElixir.
+  Documentation for Cable.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule CableElixir do
 
   ## Examples
 
-      iex> CableElixir.hello()
+      iex> Cable.hello()
       :world
 
   """
