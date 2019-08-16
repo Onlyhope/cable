@@ -4,16 +4,20 @@ defmodule Http do
 
     def start_link(port: port) do
         
-        {:ok, socket} = :gen_tcp.listen(port, active: false, pocket: :http_bin, reuseaddr: true)
+        {:ok, socket} = :gen_tcp.listen(port, [:binary])
         Logger.info("Accepting connections on port #{port}")
 
-        {:ok, spawn_link(Http, :accept, [socket])}
+        # {:ok, spawn_link(Http, :hello, [self()])}
+        {:ok, spawn_link(Http, :accept, [socket, self()])}
 
     end
 
-    def accept(socket) do
+    def accept(socket, pid) do
         
         {:ok, request} = :gen_tcp.accept(socket)
+        
+        IO.inspect request
+        IO.puts "Received request: #{inspect request}"
 
         spawn(fn -> 
             body = "Hello World! The time is #{Time.utc_now |> Time.to_string}"
@@ -25,12 +29,18 @@ defmodule Http do
             #{body}
             """
 
-            send(request, response)
+            send_response(request, response)
 
         end)
 
-        accept(socket)
+        accept(socket, pid)
+
     end
+
+    def hello(pid) do
+        send(pid, "Hello World!")
+    end
+
 
     def send_response(socket, response) do
         :gen_tcp.send(socket, response)

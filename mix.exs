@@ -3,7 +3,7 @@ defmodule CableElixir.MixProject do
 
   def project do
     [
-      app: :cable,
+      app: :application,
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
@@ -15,6 +15,7 @@ defmodule CableElixir.MixProject do
   def application do
     [
       extra_applications: [:logger]
+      mod: {Cable.Application, []}}
     ]
   end
 
