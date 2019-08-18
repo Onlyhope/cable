@@ -8,7 +8,7 @@ defmodule Cable.Application do
         # Starts a worker by calling: Cable.Worker.start_link(arg)
         # {Cable.Worker, arg}
         children = [
-            {Http, port: 3000}
+            {Http.PlugAdapter, plug: CurrentTime, port: 3000}
         ]
 
         # See https://hexdocs.pm/elixir/Supervisor.html
