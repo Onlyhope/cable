@@ -1,10 +1,18 @@
 defmodule Http.PlugAdapter do
     
     def dispatch(request, plug) do
+
+        IO.puts("Request: #{inspect request} Plug: #{inspect plug}")
+
+        # %{full_path: full_path} = Http.read_request(request)
+
+        full_path = "haha"
         
         %Plug.Conn{
             adapter: {Http.PlugAdapter, request},
-            owner: self()
+            owner: self(),
+            path_info: path_info(full_path),
+            query_string: query_string(full_path)
         }
         |> plug.call([])
 
@@ -33,4 +41,19 @@ defmodule Http.PlugAdapter do
             acc <> key <> ": " <> value <> "\n\r"
         end)
     end
+
+    defp path_info(full_path) do
+        [path|_] = String.split(full_path, "?")
+        path |> String.split("/") |> Enum.reject(&(&1 == ""))
+    end
+    
+    defp query_string([_]), do: ""
+    defp query_string([_, query_string]), do: query_string
+
+    defp query_string(full_path) do
+        full_path
+        |> String.split("?")
+        |> query_string
+    end
+
 end

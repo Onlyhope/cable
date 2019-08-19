@@ -15,7 +15,6 @@ defmodule Http do
         
         {:ok, request} = :gen_tcp.accept(socket)
         
-        IO.inspect request
         IO.puts "Received request: #{inspect request}"
 
         spawn(fn -> dispatch.(request) end)
@@ -49,6 +48,11 @@ defmodule Http do
     end
     
     def child_spec(opts) do
+
+        port = opts[:port]
+        dispatch = opts[:dispatch]
+        IO.puts "Starting Http with ports: #{inspect port} dispatch: #{inspect dispatch}"
+
         %{id: Http, start: {Http, :start_link, [opts]}}
     end
 
