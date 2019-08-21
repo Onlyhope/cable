@@ -4,7 +4,7 @@ defmodule Http do
 
     def start_link(port: port, dispatch: dispatch) do
         
-        {:ok, socket} = :gen_tcp.listen(port, [:binary])
+        {:ok, socket} = :gen_tcp.listen(port, [:binary, packet: :http_bin, active: false])
         Logger.info("Accepting connections on port #{port}")
 
         {:ok, spawn_link(Http, :accept, [socket, dispatch])}
@@ -25,12 +25,13 @@ defmodule Http do
 
     def read_request(request, acc \\ %{headers: []}) do
 
-        result = :gen_tcp.recv(request, 0) |> IO.inspect
+        result = :gen_tcp.recv(request, 0)
+        |> IO.inspect
 
         case result do
             {:ok, {:http_request, :GET, {:abs_path, full_path}, _}} ->
                 read_request(request, Map.put(acc, :full_path, full_path))
-            {:ok, :http_ench} ->
+            {:ok, :http_eoh} ->
                 acc
             {:ok, {:http_header, _, key, _, value}} ->
                 read_request(

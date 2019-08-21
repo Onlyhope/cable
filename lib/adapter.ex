@@ -4,8 +4,9 @@ defmodule Http.PlugAdapter do
 
         IO.puts("Request: #{inspect request} Plug: #{inspect plug}")
 
-        # %{full_path: full_path} = Http.read_request(request)
-
+        # %{full_path: full_path} = 
+        Http.read_request(request)
+        |> IO.inspect
         full_path = "haha"
         
         %Plug.Conn{
