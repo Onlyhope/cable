@@ -1,13 +1,13 @@
 defmodule Http.PlugAdapter do
+
+    require Logger
     
     def dispatch(request, plug) do
 
         IO.puts("Request: #{inspect request} Plug: #{inspect plug}")
 
-        # %{full_path: full_path} = 
-        Http.read_request(request)
+        %{full_path: full_path} = Http.read_request(request)
         |> IO.inspect
-        full_path = "haha"
         
         %Plug.Conn{
             adapter: {Http.PlugAdapter, request},
@@ -15,7 +15,7 @@ defmodule Http.PlugAdapter do
             path_info: path_info(full_path),
             query_string: query_string(full_path)
         }
-        |> plug.call([])
+        |> plug.play([word: "abc", length: 10])
 
     end
 
@@ -34,6 +34,7 @@ defmodule Http.PlugAdapter do
     end
 
     def child_spec(plug: plug, port: port) do
+        Logger.info "Http.PlugAdapter.child_spec() -> #{inspect plug} #{inspect port}"
         Http.child_spec(port: port, dispatch: &dispatch(&1, plug))
     end
 

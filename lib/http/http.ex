@@ -4,7 +4,8 @@ defmodule Http do
 
     def start_link(port: port, dispatch: dispatch) do
         
-        {:ok, socket} = :gen_tcp.listen(port, [:binary, packet: :http_bin, active: false])
+        {:ok, socket} = :gen_tcp.listen(port,
+            [:binary, packet: :http_bin, active: false, reuseaddr: true])
         Logger.info("Accepting connections on port #{port}")
 
         {:ok, spawn_link(Http, :accept, [socket, dispatch])}
@@ -13,11 +14,11 @@ defmodule Http do
 
     def accept(socket, dispatch) do
         
-        {:ok, request} = :gen_tcp.accept(socket)
+        {:ok, client} = :gen_tcp.accept(socket)
         
-        IO.puts "Received request: #{inspect request}"
+        IO.puts "Received request: #{inspect client}"
 
-        spawn(fn -> dispatch.(request) end)
+        spawn(fn -> dispatch.(client) end)
 
         accept(socket, dispatch)
 
@@ -49,10 +50,11 @@ defmodule Http do
     end
     
     def child_spec(opts) do
+        
+        Logger.info "Http.child_spec() -> #{inspect opts}"
 
         port = opts[:port]
         dispatch = opts[:dispatch]
-        IO.puts "Starting Http with ports: #{inspect port} dispatch: #{inspect dispatch}"
 
         %{id: Http, start: {Http, :start_link, [opts]}}
     end
