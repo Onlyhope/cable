@@ -13,7 +13,8 @@ defmodule Cable.Application do
             Supervisor.child_spec({Http.PlugAdapter, [plug: CurrentTime, port: 3050]}, id: :server_2),
             Supervisor.child_spec({Http.PlugAdapter, [plug: CurrentTime, port: 3000]}, id: :server_1),
             Supervisor.child_spec({Http.PlugAdapter, [plug: CurrentTime, port: 3020]}, id: :server_3),
-            {Sandbox, []},
+            Supervisor.child_spec({Sandbox, [name: "Aaron"]}, id: :sandbox_1),
+            Supervisor.child_spec({Sandbox, [name: "Rania"]}, id: :sandbox_2),
 
 
         ]

@@ -1,25 +1,30 @@
 defmodule Sandbox do
+
+    require Logger
     
-    def do_work do
-        IO.puts "Doing work..."
-        :timer.sleep(2000)
-        IO.puts "Finish work!"
+    def start_work(app_name) do
+        
+        Logger.info "Starting work..."
+        
+        Task.start_link(fn -> do_work(app_name) end)
+
+        {:ok, self()}
     end
 
-    def start do
-        {:ok, socket} = :gen_tcp.listen(9000,
-            [:binary, packet: :http_bin, active: false, reuseaddr: true])
+    def do_work(app_name) do
 
-        IO.puts "Socket: #{inspect socket}"
-        {:ok, client} = :gen_tcp.accept(socket)
-        
+        Logger.info "#{app_name} doing work... for 2 seconds"
+        :timer.sleep(2000)
+
+        do_work(app_name)
     end
 
     def child_spec(opts) do
         IO.inspect opts
+        [name: name] = opts
         %{
             id: __MODULE__,
-            start: {__MODULE__, :start, []},
+            start: {__MODULE__, :start_work, [name]},
             type: :worker,
             restart: :permanent,
             shutdown: 500
