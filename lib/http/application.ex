@@ -8,7 +8,14 @@ defmodule Cable.Application do
         # Starts a worker by calling: Cable.Worker.start_link(arg)
         # {Cable.Worker, arg}
         children = [
-            {Http.PlugAdapter, plug: CurrentTime, port: 3000}
+        #    {Http.PlugAdapter, plug: CurrentTime, port: 3000},
+        #    {Http.PlugAdapter, plug: CurrentTime, port: 4000}
+            Supervisor.child_spec({Http.PlugAdapter, [plug: CurrentTime, port: 3050]}, id: :server_2),
+            Supervisor.child_spec({Http.PlugAdapter, [plug: CurrentTime, port: 3000]}, id: :server_1),
+            Supervisor.child_spec({Http.PlugAdapter, [plug: CurrentTime, port: 3020]}, id: :server_3),
+            {Sandbox, []},
+
+
         ]
 
         # See https://hexdocs.pm/elixir/Supervisor.html
