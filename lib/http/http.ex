@@ -18,7 +18,7 @@ defmodule Http do
         
         IO.puts "Received request: #{inspect client}"
 
-        spawn(fn -> dispatch.(client) end)
+        spawn(fn -> read_request(client, %{}) end)
 
         accept(socket, dispatch)
 
@@ -29,19 +29,21 @@ defmodule Http do
         result = :gen_tcp.recv(request, 0)
         |> IO.inspect
 
-        case result do
-            {:ok, {:http_request, :GET, {:abs_path, full_path}, _}} ->
-                read_request(request, Map.put(acc, :full_path, full_path))
-            {:ok, :http_eoh} ->
-                acc
-            {:ok, {:http_header, _, key, _, value}} ->
-                read_request(
-                    request,
-                    Map.put(acc, :headers, [{String.downcase(to_string(key)), value} | acc.headers])
-                )
-            {:ok, _line} -> 
-                read_request(request, acc)
-        end
+        read_request(request, acc)
+
+        # case result do
+        #     {:ok, {:http_request, :GET, {:abs_path, full_path}, _}} ->
+        #         read_request(request, Map.put(acc, :full_path, full_path))
+        #     {:ok, :http_eoh} ->
+        #         acc
+        #     {:ok, {:http_header, _, key, _, value}} ->
+        #         read_request(
+        #             request,
+        #             Map.put(acc, :headers, [{String.downcase(to_string(key)), value} | acc.headers])
+        #         )
+        #     {:ok, _line} -> 
+        #         read_request(request, acc)
+        # end
     end
 
     def send_response(socket, response) do

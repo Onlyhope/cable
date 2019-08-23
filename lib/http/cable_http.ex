@@ -9,20 +9,41 @@ defmodule Cable.Http do
 
         Logger.info "Accepting connections on port #{port}"
 
-        {:ok, spawn_link(Http, :accept, [socket, dispatch])}
-        
+        {:ok, spawn_link(Cable.Http, :accept, [socket])}
+
     end
 
     def accept(socket) do
         
-        {:ok, socket} = :gen_tcp.accept(socket)
+        {:ok, client} = :gen_tcp.accept(socket)
 
-        spawn(fn -> 
-            IO.puts "Read request here..."
-        end)
+        IO.puts "Accepted socket..."
+
+        spawn(fn -> loop_receive(client) end)
 
         accept(socket)
 
+    end
+
+    def loop_receive(socket) do
+
+        result = :gen_tcp.recv(socket, 0)
+        |> IO.inspect
+
+        loop_receive(socket)
+    end
+
+    def serve(socket, %{awaiting: :response} = req), do: req 
+    def serve(socket, req) do
+        req = socket
+        |> read_line()
+
+        serve(socket, req)
+    end
+
+    defp read_line(socket) do
+        packets = :gen_tcp.recv(socket, 0)
+        IO.puts "Packets: #{inspect packets}"
     end
 
     def send_response(socket, response) do
