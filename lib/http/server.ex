@@ -11,10 +11,18 @@ defmodule Cable.Server do
     defp read(socket) do
 
         {:ok, line} = :gen_tcp.recv(socket, 0)
+
         headers = read_headers(socket)
+        |> Enum.map(fn {k, v} -> {String.trim(k), String.trim(v)} end)
+        |> Enum.reduce(Map.new, fn ({k, v}, acc) -> Map.put(acc, k, v) end)
+
+        IO.puts "Reading body..."
+
+        body = read_body(socket)
         
-        IO.puts "Line: #{inspect line}"
-        IO.inspect headers
+        IO.puts "Request: #{inspect line}"
+        IO.puts "Headers: #{inspect headers}"
+        IO.puts "Body: #{inspect body}"
 
         {line, headers}
     end
@@ -24,11 +32,13 @@ defmodule Cable.Server do
         [verb, path, _version] = String.split(line)
 
         {path, query} = parse_uri(path)
+
+        query_params = parse_params(query)
         
         %{
             verb: verb,
             path: path,
-            query: query,
+            query: query_params,
             headers: headers
         }
     end
@@ -37,14 +47,18 @@ defmodule Cable.Server do
 
         {:ok, line} = :gen_tcp.recv(socket, 0)
 
-        result = Regex.run(~r/(\w+): (.*)/, line)
+        IO.puts "H: #{inspect line}"
 
-        IO.puts "Result of regex: "
-        IO.inspect result
-
-        case result do
+        case Regex.run(~r/(\w+):\s*(.*)/, line) do
             [_line, key, value] -> [{key, value}] ++ read_headers(socket, headers)
             _                   -> []
+        end
+    end
+
+    defp read_body(socket, body \\ "") do
+        case :gen_tcp.recv(socket, 0) do
+            {:ok, line} -> line <> read_body(socket, body)
+            _           -> body
         end
     end
 
@@ -55,7 +69,11 @@ defmodule Cable.Server do
         end
     end
 
-    defp process(socket) do
+    defp parse_params(_query) do
+        IO.puts "Processing query params..."
+    end
+
+    defp process(_socket) do
         IO.puts "Delegating to application for processing..."
     end
 

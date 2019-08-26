@@ -28,11 +28,6 @@ defmodule Cable.Http do
 
     end
 
-    def send_response(socket, response) do
-        :gen_tcp.send(socket, response)
-        :gen_tcp.close(socket)
-    end
-
     def child_spec(opts) do
         %{
             id: Cable.Http,
