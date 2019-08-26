@@ -12,6 +12,9 @@ defmodule Cable.Server do
 
         {:ok, line} = :gen_tcp.recv(socket, 0)
         headers = read_headers(socket)
+        
+        IO.puts "Line: #{inspect line}"
+        IO.inspect headers
 
         {line, headers}
     end
