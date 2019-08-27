@@ -2,7 +2,7 @@ defmodule Cable.Http do
     
     require Logger
 
-    @options [:binary, packet: :line, active: false, reuseaddr: true]
+    @options [:binary, packet: :raw, active: false, reuseaddr: true]
     
     def start_link(port: port) do
 
@@ -22,7 +22,7 @@ defmodule Cable.Http do
 
         IO.puts "Accepted socket... #{inspect client}"
 
-        spawn(fn -> Cable.Server.serve(client) end)
+        spawn(fn -> Cable.Server.serve_new(client) end)
 
         accept(listener)
 
