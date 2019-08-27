@@ -22,7 +22,7 @@ defmodule Cable.Http do
 
         IO.puts "Accepted socket... #{inspect client}"
 
-        spawn(fn -> Cable.Server.serve_new(client) end)
+        spawn(fn -> Cable.Server.serve(client) end)
 
         accept(listener)
 
