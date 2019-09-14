@@ -1,6 +1,7 @@
 defmodule Sandbox do
 
     require Logger
+    require Cable.Router
     
     def start_work(app_name) do
         
@@ -31,5 +32,15 @@ defmodule Sandbox do
         }
         # %{id: Http, start: {Http, :start_link, [opts]}}
     end
-    
+
+    def test do
+        
+        Cable.Router.get "/path/to/execute" do
+        
+            x = 1 + 1
+
+        end
+
+    end
+
 end
