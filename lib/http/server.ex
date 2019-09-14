@@ -27,7 +27,6 @@ defmodule Cable.Server do
         [verb, path, _version] = String.split(protocol)
         
         headers = read_headers(headers)
-        |> Enum.map(fn {k, v} -> {String.trim(k), String.trim(v)} end)
         |> Enum.reduce(Map.new, fn ({k, v}, acc) -> Map.put(acc, k, v) end)
 
         %{
@@ -45,7 +44,7 @@ defmodule Cable.Server do
         |> Enum.reject(fn header -> header == "" end)
         |> Enum.map(fn header ->
             [_line, key, value] = Regex.run(~r/(\w+):\s*(.*)/, header)
-            {key, value}
+            {String.trim(key), String.trim(value)}
         end)
 
     end
