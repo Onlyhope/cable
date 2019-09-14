@@ -36,9 +36,7 @@ defmodule Sandbox do
     def test do
         
         Cable.Router.get "/path/to/execute" do
-        
             x = 1 + 1
-
         end
 
     end

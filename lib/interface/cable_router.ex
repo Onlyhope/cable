@@ -1,14 +1,17 @@
 defmodule Cable.Router do
     
-    defmacro get(arg1, arg2) do
-        quote do: IO.puts "Arg 1"
-        IO.inspect arg1
-        quote do: IO.puts "Arg 2"
-        IO.inspect arg2
+    defmacro get(path, clauses) do
+
+        IO.puts "Path #{inspect path}"
+        IO.inspect path
+
+        IO.puts "Clauses #{inspect clauses}"
+        IO.inspect clauses
+
     end
     
     defmacro post(code) do
-        IO.inspect code
+        IO.puts "Hello World"
     end
 
 end
