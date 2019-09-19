@@ -1,7 +1,7 @@
 defmodule Sandbox do
 
     require Logger
-    require Cable.Router
+    use Cable.Router
     
     def start_work(app_name) do
         
@@ -35,7 +35,7 @@ defmodule Sandbox do
 
     def test do
         
-        Cable.Router.get "/path/to/execute" do
+        get "/path/to/execute" do
             x = 1 + 1
         end
 
