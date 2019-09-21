@@ -2,7 +2,7 @@ defmodule Sandbox do
 
     require Logger
     use Cable.Router
-    
+
     def start_work(app_name) do
         
         Logger.info "Starting work..."
@@ -33,12 +33,20 @@ defmodule Sandbox do
         # %{id: Http, start: {Http, :start_link, [opts]}}
     end
 
-    def test do
-        
-        get "/path/to/execute" do
-            x = 1 + 1
-        end
+    get "path" do
+        2
+    end
 
+    def match("GET", ["foo"], _conn) do
+        IO.puts "GET: /foo"
+    end
+
+    def match("GET", ["foo", "tasks"], _conn) do
+        IO.puts "GET: users/tasks"
+    end
+
+    def match("GET", ["foo", "bar"], _conn) do
+        IO.puts "GET: foo/bar"
     end
 
 end

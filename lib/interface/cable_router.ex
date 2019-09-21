@@ -14,6 +14,13 @@ defmodule Cable.Router do
         IO.puts "Clauses #{inspect clauses}"
         IO.inspect clauses
 
+        method_name = "get"
+
+        quote do 
+            def unquote(:"#{method_name}")() do
+                IO.puts "Inside method"
+            end
+        end
     end
     
     defmacro post(code) do
