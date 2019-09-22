@@ -57,6 +57,16 @@ defmodule Cable.Server do
     end
 
     defp process(parsed_request) do
+        
+        http_method = parsed_request.verb
+        |> String.downcase
+        |> String.to_atom
+
+        String.split(parsed_request.path, "/")
+        |> Cable.Router.match(parsed_request.path, http_method, parsed_request)
+
+        IO.puts "http_method = #{inspect http_method}"
+
         IO.puts "Delegating to application for processing..."
         IO.inspect parsed_request
     end
