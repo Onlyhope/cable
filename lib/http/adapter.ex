@@ -4,7 +4,7 @@ defmodule Cable.ConnAdapter do
     
     def dispatch(request, plug) do
 
-        %{full_path: full_path} = Http.read_request(request)
+        %{full_path: _full_path} = Http.read_request(request)
         |> IO.inspect
         
         %Plug.Conn{
@@ -15,7 +15,7 @@ defmodule Cable.ConnAdapter do
 
     end
 
-    def child_spec(plug: plug, port: port) do
+    def child_spec(plug: _plug, port: port) do
         Cable.Http.child_spec(port: port)
     end
 end

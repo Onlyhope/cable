@@ -39,7 +39,7 @@ defmodule Cable.Router do
         IO.inspect action
 
         quote do
-            def match(paths, via: method) do
+            def match(path, via: method) do
                 fn () -> unquote(action) end
             end
         end
