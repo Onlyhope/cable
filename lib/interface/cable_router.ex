@@ -13,26 +13,32 @@ defmodule Cable.Router do
     
     defmacro get(path, clauses) do
 
+        String.split(path, "/")
+        |> compile(clauses, :get)
 
-        paths = String.split(path, "/")
+    end
 
-        IO.puts "Path #{inspect path}"
-        IO.inspect paths
+    defmacro post(path, clauses) do
+
+        String.split(path, "/")
+        |> compile(clauses, :post)
+
+    end
+
+    defp compile(path, clauses, method) do
 
         [do: action] = clauses
 
         IO.puts "Clauses #{inspect clauses}"
         IO.inspect action
 
-        quote do 
-            def match(paths, via: :get) do
+        quote do
+            def match(paths, via: method) do
                 fn () -> unquote(action) end
             end
         end
+        
     end
-    
-    defmacro post(code) do
-        IO.puts "Hello World"
-    end
+
 
 end
