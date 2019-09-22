@@ -12,17 +12,18 @@ defmodule Cable.Router do
     end
     
     defmacro get(path, clauses) do
-
         String.split(path, "/")
         |> compile(clauses, :get)
-
     end
 
     defmacro post(path, clauses) do
-
         String.split(path, "/")
         |> compile(clauses, :post)
+    end
 
+    defmacro put(path, clauses) do
+        String.split(path, "/")
+        |> compile(clauses, :put)
     end
 
     defp compile(path, clauses, method) do
