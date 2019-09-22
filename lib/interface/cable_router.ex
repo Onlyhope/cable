@@ -26,6 +26,11 @@ defmodule Cable.Router do
         |> compile(clauses, :put)
     end
 
+    defmacro delete(path, clauses) do
+        String.split(path, "/")
+        |> compile(clauses, :delete)
+    end
+
     defp compile(path, clauses, method) do
 
         [do: action] = clauses
