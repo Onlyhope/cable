@@ -57,15 +57,13 @@ defmodule Cable.Server do
     end
 
     defp process(parsed_request) do
+
+        path = String.split(parsed_request.path, "/")
+
+        func = parsed_request.verb
+        |> Sandbox.match(path, parsed_request)
         
-        http_method = parsed_request.verb
-        |> String.downcase
-        |> String.to_atom
-
-        String.split(parsed_request.path, "/")
-        |> Cable.Router.match(parsed_request.path, http_method, parsed_request)
-
-        IO.puts "http_method = #{inspect http_method}"
+        func.()
 
         IO.puts "Delegating to application for processing..."
         IO.inspect parsed_request

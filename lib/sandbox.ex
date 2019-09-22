@@ -34,6 +34,9 @@ defmodule Sandbox do
     end
 
     get "path" do
+        IO.puts "Executing GET /path ..."
+        # TODO - Request is not defined... how do I use the request here?
+        # IO.puts "Request: #{inspect request}" 
         2
     end
 
