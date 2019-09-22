@@ -6,19 +6,27 @@ defmodule Cable.Router do
         end
     end
     
+    defmacro inspect_code(code) do
+        IO.inspect code
+        code
+    end
+    
     defmacro get(path, clauses) do
 
+
+        paths = String.split(path, "/")
+
         IO.puts "Path #{inspect path}"
-        IO.inspect path
+        IO.inspect paths
+
+        [do: action] = clauses
 
         IO.puts "Clauses #{inspect clauses}"
-        IO.inspect clauses
-
-        method_name = "get"
+        IO.inspect action
 
         quote do 
-            def unquote(:"#{method_name}")() do
-                IO.puts "Inside method"
+            def match(paths, via: :get) do
+                fn () -> unquote(action) end
             end
         end
     end
