@@ -61,7 +61,7 @@ defmodule Cable.Server do
         [_ | path] = String.split(parsed_request.path, "/")
 
         result = parsed_request.verb
-        |> Sandbox.match(path, parsed_request)
+        |> Sandbox.dispatch(path, parsed_request)
 
         IO.puts "Result: #{inspect result}"
 

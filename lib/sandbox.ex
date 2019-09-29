@@ -33,7 +33,9 @@ defmodule Sandbox do
         # %{id: Http, start: {Http, :start_link, [opts]}}
     end
 
-    get("path", Sandbox.Handler, :process)
+    # Testing routing mechanisms
+
+    get("path", Sandbox.Handler)
 
     def match("GET", ["foo"], request) do
         IO.puts "GET: /foo"
