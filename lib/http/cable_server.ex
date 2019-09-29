@@ -58,12 +58,12 @@ defmodule Cable.Server do
 
     defp process(parsed_request) do
 
-        path = String.split(parsed_request.path, "/")
+        [_ | path] = String.split(parsed_request.path, "/")
 
-        func = parsed_request.verb
+        result = parsed_request.verb
         |> Sandbox.match(path, parsed_request)
-        
-        func.()
+
+        IO.puts "Result: #{inspect result}"
 
         IO.puts "Delegating to application for processing..."
         IO.inspect parsed_request

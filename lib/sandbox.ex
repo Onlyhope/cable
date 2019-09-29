@@ -33,23 +33,21 @@ defmodule Sandbox do
         # %{id: Http, start: {Http, :start_link, [opts]}}
     end
 
-    get "path" do
-        IO.puts "Executing GET /path ..."
-        # TODO - Request is not defined... how do I use the request here?
-        # IO.puts "Request: #{inspect request}" 
-        2
-    end
+    get("path", Sandbox.Handler, :process)
 
-    def match("GET", ["foo"], _conn) do
+    def match("GET", ["foo"], request) do
         IO.puts "GET: /foo"
+        IO.puts "Request: #{inspect request}"
     end
 
-    def match("GET", ["foo", "tasks"], _conn) do
+    def match("GET", ["foo", "tasks"], request) do
         IO.puts "GET: users/tasks"
+        IO.puts "Request: #{inspect request}"
     end
 
-    def match("GET", ["foo", "bar"], _conn) do
+    def match("GET", ["foo", "bar"], request) do
         IO.puts "GET: foo/bar"
+        IO.puts "Request: #{inspect request}"
     end
 
 end
