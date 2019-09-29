@@ -1,12 +1,11 @@
 defmodule Sandbox.Handler do
     
-    def process(request) do
-        IO.puts "Processing request... #{inspect request}"
+    def process_path(request) do
+        IO.puts "Processing path's request... #{inspect request}"
     end
 
-    def match("GET", ["path"], request) do
-        IO.puts "Executing GET /path ..."
-        IO.puts "Processing request... #{inspect request}"
+    def process_users(request) do
+        IO.puts "Processing user's request... #{inspect request}"
     end
 
 end

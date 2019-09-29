@@ -35,7 +35,9 @@ defmodule Sandbox do
 
     # Testing routing mechanisms
 
-    get("path", Sandbox.Handler)
+
+    get("/path", Sandbox.Handler, "process_path")
+    get("/users", Sandbox.Handler, "process_users")
 
     def match("GET", ["foo"], request) do
         IO.puts "GET: /foo"

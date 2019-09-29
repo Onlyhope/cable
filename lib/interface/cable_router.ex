@@ -16,37 +16,33 @@ defmodule Cable.Router do
         code
     end
     
-    defmacro get(path, handler) do
-        String.split(path, "/")
-        |> compile(handler, @get)
+    defmacro get(path, handler, func) do
+        compile(path, @get, handler, func)
     end
 
-    defmacro post(path, handler) do
-        String.split(path, "/")
-        |> compile(handler, @post)
+    defmacro post(path, handler, func) do
+        compile(path, @post, handler, func)
     end
 
-    defmacro put(path, handler) do
-        String.split(path, "/")
-        |> compile(handler, @put)
+    defmacro put(path, handler, func) do
+        compile(path, @put, handler, func)
     end
 
-    defmacro delete(path, handler) do
-        String.split(path, "/")
-        |> compile(handler, @delete)
+    defmacro delete(path, handler, func) do
+        compile(path, @delete, handler, func)
     end
 
-    defp compile(path, handler, method) do
-        
-        IO.puts "Inspecting handler..."
-        IO.inspect handler
+    defp compile(path, method, handler, func) do
 
-        quote bind_quoted: [method: method, path: path, handler: handler] do
+        path = path 
+        |> String.split("/") 
+        |> Enum.filter(fn (s) -> s != "" end)
+
+        quote bind_quoted: [method: method, path: path, handler: handler, func: func] do
             def dispatch(unquote(method), unquote(path), request) do
-                unquote(handler).match(unquote(method), unquote(path), request)
+                unquote(handler).unquote(:"#{func}")(request)
             end
         end
-        |> IO.inspect
         
     end
 
