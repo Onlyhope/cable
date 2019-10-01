@@ -16,8 +16,6 @@ defmodule Cable.Application do
             # {Cable.ConnAdapter, [plug: CurrentTime, port: 4000]}
             # Supervisor.child_spec({Sandbox, [name: "Aaron"]}, id: :sandbox_1),
             # Supervisor.child_spec({Sandbox, [name: "Rania"]}, id: :sandbox_2),
-
-
         ]
 
         # See https://hexdocs.pm/elixir/Supervisor.html

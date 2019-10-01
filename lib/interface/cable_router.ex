@@ -39,7 +39,7 @@ defmodule Cable.Router do
         |> Enum.filter(fn (s) -> s != "" end)
 
         quote bind_quoted: [method: method, path: path, handler: handler, func: func] do
-            def dispatch(unquote(method), unquote(path), request) do
+            def match(unquote(method), unquote(path), request) do
                 unquote(handler).unquote(:"#{func}")(request)
             end
         end

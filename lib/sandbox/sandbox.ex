@@ -39,6 +39,11 @@ defmodule Sandbox do
     get("/path", Sandbox.Handler, "process_path")
     get("/users", Sandbox.Handler, "process_users")
 
+    def match("POST", [""], request) do
+        IO.puts "POST: /"
+        IO.puts ("Request: #{inspect request}")
+    end
+
     def match("GET", ["foo"], request) do
         IO.puts "GET: /foo"
         IO.puts "Request: #{inspect request}"

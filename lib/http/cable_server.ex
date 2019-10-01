@@ -24,10 +24,16 @@ defmodule Cable.Server do
 
     defp parse({protocol, headers, body}) do
 
+        IO.puts "Headers: #{inspect headers}"
+
         [verb, path, _version] = String.split(protocol)
         
         headers = read_headers(headers)
         |> Enum.reduce(Map.new, fn ({k, v}, acc) -> Map.put(acc, k, v) end)
+
+        body = cond do
+            headers["Type"] == "application/json" -> Jason.decode!(body)
+        end
 
         %{
             verb: verb,
@@ -61,7 +67,7 @@ defmodule Cable.Server do
         [_ | path] = String.split(parsed_request.path, "/")
 
         result = parsed_request.verb
-        |> Sandbox.dispatch(path, parsed_request)
+        |> Sandbox.match(path, parsed_request)
 
         IO.puts "Result: #{inspect result}"
 
